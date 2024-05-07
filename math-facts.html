@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Facts Practice Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .final-message {
+            color: white;
+        }
+        .message {
+            padding-bottom: 10px;
+        }
+        .container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+        h1 {
+            margin-top: 0;
+            color: #fff;
+        }
+        #menu {
+            margin-bottom: 20px;
+        }
+       select, button {
+            font-size: 16px;
+            padding: 8px 12px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #game {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .keypad button {
+            font-size: 20px;
+            padding: 15px 25px;
+            margin: 5px;
+            width: calc(25% - 10px);
+            border: 2px solid #555;
+            border-radius: 5px;
+            background-color: #555;
+            color: #fff;
+            cursor: pointer;
+        }
+        .keypad button:hover {
+            background-color: #777;
+        }
+        #problem,
+        #score,
+        #final-score {
+            font-size: 24px;
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+        #answer {
+            font-size: 18px;
+            padding: 8px;
+            margin: 10px auto;
+            width: 200px;
+            text-align: center;
+            background-color: #fff;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            display: none; /* Hide by default */
+        }
+        #answer::placeholder {
+            color: #999;
+        }
+        #timer {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #fff;
+            display: none; /* Hide by default */
+        }
+        .navigation {
+            text-align: center;
+            margin-bottom: 20px;
+            color: black;
+        }
+        .navigation a {
+            color: black;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        .Logo {
+            color: black;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        @media only screen and (max-width: 600px) {
+            #game .keypad button {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+        }
+        @media only screen and (max-width: 400px) {
+            #game .keypad button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="Logo">Play2Learn Logo</h1>
+<nav class="navigation">
+    <a href="index.html">Home</a> |
+    <div class="dropdown">
+        <button class="dropbtn">Games</button> |
+        <div class="dropdown-content">
+            <a href="anagram-hunt.html">Anagram Hunt</a>
+            <a href="math-facts.html">Math Facts Practice</a>
+        </div>
+    </div>
+    <a href="about.html">About</a> |
+    <a href="login.html">Login</a>
+    <hr>
+</nav>
+<div class="container">
+    <h1>Math Facts Practice Game</h1>
+
+    <div id="menu">
+        <select id="operation">
+            <option value="addition">Addition</option>
+            <option value="subtraction">Subtraction</option>
+            <option value="multiplication">Multiplication</option>
+            <option value="division">Division</option>
+        </select>
+        <button onclick="startGame()">Go</button>
+    </div>
+
+    <div id="game" class="keypad"></div>
+
+    <div id="problem"></div>
+    <input type="text" id="answer" placeholder="Enter answer" disabled>
+
+    <div id="score" style="display: none;">Correct Answers: 0</div>
+
+    <div id="timer" style="display: none;">Time Left: 30s</div>
+
+    <div id="final-score" style="display: none;">
+        <div class="message" id="final-message"></div>
+       <div class="message"><!--Your final score is: <span id="final-score-value">0</span><span id="correct-answers-count">0</span>--></div>
+        <button onclick="restartGame();">Play Again</button>
+    </div>
+</div>
+
+<script>
+    let timer;
+    let score = 0;
+    let correctAnswers = 0;
+    let timeLeft = 30;
+    let problemChanged = false;
+
+    function startGame() {
+        const selectedOperation = document.getElementById("operation").value;
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("game").style.display = "flex";
+        document.getElementById("problem").style.display = "block"; // Show problem
+        document.getElementById("score").style.display = "none"; // Hide score initially
+        document.getElementById("answer").style.display = "block"; // Show answer text box
+        document.getElementById("timer").style.display = "block"; // Show timer
+        document.getElementById("answer").disabled = false; // Enable answer input
+        generateProblem(selectedOperation);
+        timer = setInterval(updateTimer, 1000);
+    }
+
+    function generateProblem(operation) {
+        let num1, num2;
+        switch(operation) {
+            case "addition":
+                num1 = Math.floor(Math.random() * 10);
+                num2 = Math.floor(Math.random() * 10);
+                document.getElementById("problem").innerText = num1 + " + " + num2 + " = ";
+                break;
+            case "subtraction":
+                num1 = Math.floor(Math.random() * 10);
+                num2 = Math.floor(Math.random() * num1);
+                document.getElementById("problem").innerText = num1 + " - " + num2 + " = ";
+                break;
+            case "multiplication":
+                num1 = Math.floor(Math.random() * 10);
+                num2 = Math.floor(Math.random() * 10);
+                document.getElementById("problem").innerText = num1 + " * " + num2 + " = ";
+                break;
+            case "division":
+            case "division":
+            num2 = Math.floor(Math.random() * 10) + 1; // Avoid division by zero
+            result = Math.floor(Math.random() * 10); // Randomize result
+            num1 = num2 * result; // Ensure num1 is divisible by num2
+            document.getElementById("problem").innerText = num1 + " / " + num2 + " = ";
+            break;
+                        }
+        generateKeypad(operation);
+    }
+
+    function generateKeypad(operation) {
+        const keypadDiv = document.getElementById("game");
+        keypadDiv.innerHTML = ""; // Clear previous keypad buttons
+
+        if (operation === "division") {
+            // Division requires integer inputs, so provide a simpler keypad
+            for (let i = 0; i <= 9; i++) {
+                const button = document.createElement("button");
+                button.textContent = i;
+                button.onclick = function() {
+                    document.getElementById("answer").value += i;
+                };
+                keypadDiv.appendChild(button);
+            }
+        } else {
+            // For other operations, provide a full numeric keypad
+            for (let i = 1; i <= 9; i++) {
+                const button = document.createElement("button");
+                button.textContent = i;
+                button.onclick = function() {
+                    document.getElementById("answer").value += i;
+                };
+                keypadDiv.appendChild(button);
+            }
+            const zeroButton = document.createElement("button");
+            zeroButton.textContent = "0";
+            zeroButton.onclick = function() {
+                document.getElementById("answer").value += "0";
+            };
+            keypadDiv.appendChild(zeroButton);
+        }
+
+        // Add Enter and Clear buttons
+        const clearButton = document.createElement("button");
+        clearButton.textContent = "Clear";
+        clearButton.onclick = function() {
+            document.getElementById("answer").value = "";
+        };
+        keypadDiv.appendChild(clearButton);
+
+        const enterButton = document.createElement("button");
+        enterButton.textContent = "Enter";
+        enterButton.onclick = function() {
+            checkAnswer();
+        };
+        keypadDiv.appendChild(enterButton);
+    }
+
+    document.getElementById("answer").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            checkAnswer();
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+
+    function updateTimer() {
+        timeLeft--;
+        document.getElementById("timer").innerText = "Time Left: " + timeLeft + "s";
+        if (timeLeft === 0) {
+            clearInterval(timer);
+            endGame();
+        }
+    }
+
+    function checkAnswer() {
+        const userAnswer = parseInt(document.getElementById("answer").value);
+        const problemText = document.getElementById("problem").innerText.trim();
+        const operation = document.getElementById("operation").value;
+        let num1, num2, result;
+        switch(operation) {
+            case "addition":
+                num1 = parseInt(problemText.split("+")[0]);
+                num2 = parseInt(problemText.split("+")[1]);
+                result = num1 + num2;
+                break;
+            case "subtraction":
+                num1 = parseInt(problemText.split("-")[0]);
+                num2 = parseInt(problemText.split("-")[1]);
+                result = num1 - num2;
+                break;
+            case "multiplication":
+                num1 = parseInt(problemText.split("*")[0]);
+                num2 = parseInt(problemText.split("*")[1]);
+                result = num1 * num2;
+                break;
+            case "division":
+                num1 = parseInt(problemText.split("/")[0]);
+                num2 = parseInt(problemText.split("=")[0].split("/")[1]);
+                result = num1 / num2;
+            break;
+
+        }
+        if (!isNaN(userAnswer) && userAnswer === result) {
+            score++;
+            correctAnswers++; // Increment correct answers count
+            document.getElementById("score").style.display = "block"; // Show score
+            document.getElementById("score").innerText = "Correct Answers: " + score;
+        }
+        document.getElementById("answer").value = ""; // Clear input field after every attempt
+        generateProblem(operation); // Generate a new problem
+    }
+
+    function endGame() {
+        clearInterval(timer);
+        document.getElementById("answer").value = ""; // Clear input field when time runs out
+        document.getElementById("answer").style.display = "none";
+        document.getElementById("game").style.display = "none";
+        document.getElementById("final-score").style.display = "block";
+        //document.getElementById("final-score-value").innerText = score;
+       // document.getElementById("correct-answers-count").innerText = correctAnswers; // Display correct answers count
+        document.getElementById("timer").style.display = "none"; // Hide timer on end screen
+        document.getElementById("problem").style.display = "none"; // Hide problem on end screen
+        
+        // Show congratulatory message with correct answers count
+        document.getElementById("final-message").innerText = "Congratulations! You got " + correctAnswers + " right!";
+    }
+
+    function restartGame() {
+    score = 0;
+    correctAnswers = 0; // Reset correct answers count
+    timeLeft = 30;
+    document.getElementById("score").innerText = "Correct Answers: 0";
+    document.getElementById("timer").innerText = "Time Left: 30s";
+    document.getElementById("final-score").style.display = "none";
+    document.getElementById("menu").style.display = "block";
+    //document.getElementById("container").style.display = "block";
+    document.getElementById("problem").style.display = "none"; // Hide problem on start screen
+    document.getElementById("score").style.display = "none"; // Hide score on start screen
+    document.getElementById("timer").style.display = "none"; // Hide timer on start screen
+    //document.getElementById("correct-answers-count").style.display = "none"; // Hide correct answers count on start screen
+    }
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

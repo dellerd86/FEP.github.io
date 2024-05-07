@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Play2Learn Website Project</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://kit.fontawesome.com/85046cf48c.js" crossorigin="anonymous"></script>
+<body>
+<header>
+    <h1>Play2Learn Logo</h1>
+    <nav class="navigation">
+        <a href="index.html">Home</a> |
+        <div class="dropdown">
+            <button class="dropbtn">Games</button> |
+            <div class="dropdown-content">
+                <a href="anagram-hunt.html">Anagram Hunt</a>
+                <a href="math-facts.html">Math Facts Practice</a>
+            </div>
+        </div>
+        <a href="about.html">About</a> |
+        <a href="login.html">Login</a>
+    </nav>
+    <hr>
+    <H4>Happy Clients Say...</h4>
+      <div id="quote"></div>
+      <script>
+        // Array of quotes
+        const quotes = [
+             "The only way to do great work is to love what you do. - Steve Jobs",
+             "In the end, it's not the years in your life that count. It's the life in your years. - Abraham Lincoln",
+             "Life is what happens when you're busy making other plans. - John Lennon"
+        ];
+
+        // Function to display a random quote
+        function displayRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById("quote").textContent = quotes[randomIndex];
+        }
+
+        // Initial display of quote
+        displayRandomQuote();
+
+        // Interval to change quote every 10 seconds 
+        setInterval(displayRandomQuote, 10000);
+    </script>
+</header>
+
+<div class="container">
+    <div class="column">
+        <h3>Anagram Hunt</h3>
+        <p>An anagram is a word or phrase formed by rearranging the letters, e.g. HUNT,
+            by using each letter exactly once in the new word or phrase. An anagram is basically a play on words,
+            often with a comedic or satiric intent. The letters of many words or phrases can be rearranged to form an anagram.</p>
+            <a href="anagram-hunt.html">
+            <button type="button" class="btn btn-default btn-sm">
+              <span class="glyphicon glyphicon-play"></span> Play
+          </button></a>
+    </div>
+    <div class="column">
+        <h3>Math Facts Practice</h3>
+        <p>Basic math facts are defined as computations involving the four basic math operations:
+            addition, subtraction, multiplication, and division; using the single-digit numbers,
+            0 - 9. These basic facts are often referred to in current literature as “basic number combinations”.</p>
+            <a href="math-facts.html">
+            <button type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-play"></span> Play
+        </button></a>
+    </div>
+</div>
+<footer>
+    <hr>
+    <p>&copy 2020 Play2Learn</p>
+    <a href="contact-us.html"><i class="fa-solid fa-square-envelope fa-2x"></i></a>
+    <a href="https://instagram.com"><i class="fa-brands fa-instagram fa-2x"></i></a>
+    <a href="https://twitter.com"><i class="fa-brands fa-square-twitter fa-2x"></i></a>
+    <a href="https://facebook.com"><i class="fa-brands fa-facebook fa-2x"></i></a>
+</footer>
+</body>
+</html>
